@@ -82,11 +82,11 @@ def upload_predict():
     if request.method == "POST":
         image_file = request.files["image"]
         if image_file:
-            image = cv2.imdecode(np.fromstring(image_file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
-            MODEL = Net()
-            MODEL.load_state_dict(torch.load("FreshnessDetector.pt", map_location=torch.device(DEVICE)))
-            pred = predict(image, MODEL)
-            prices = price(image, MODEL)
+            recognized = recognize(image_file)
+            image = recognized["image"]
+            pred = recognized["result"]["freshness_level"]
+            prices = recognized["result"]["price"]
+            
             # In memory
             image_content = cv2.imencode('.jpg', image)[1].tostring()
             encoded_image = base64.encodestring(image_content)
@@ -98,6 +98,24 @@ def upload_predict():
 def purchase():
     return render_template("purchase.html")
 
+@app.route("/api/recognize", methods=["POST"])
+def api_recognize():
+    return recognize(request.files["image"])["result"]
+
+def recognize(image_file):
+    if image_file:
+        image = cv2.imdecode(np.fromstring(image_file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        MODEL = Net()
+        MODEL.load_state_dict(torch.load("FreshnessDetector.pt", map_location=torch.device(DEVICE)))
+        freshness_level = predict(image, MODEL)
+        prices = price(image, MODEL)
+        return {
+            "image": image,
+            "result": {
+             "freshness_level": freshness_level,
+             "price": prices 
+            }
+        }
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
