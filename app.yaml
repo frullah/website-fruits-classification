@@ -14,3 +14,10 @@
 
 runtime: python37
 
+handlers:
+- url: /static/css
+  static_dir: static/css/
+  expiration: '10s'
+- url: /static/js
+  static_dir: static/js/
+  expiration: '10s'
