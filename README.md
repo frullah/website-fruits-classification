@@ -4,6 +4,13 @@ Our website for Bangkit Capstone Project that can predict the level of ripeness 
 
 ## How to run locally?
 
+Go to the project folder
+or
+use this command.
+
+```bash
+cd PATH/TO/FOLDER/website-fruits-classification
+```
 Use [pip](https://pip.pypa.io/en/stable/) package manager to install requirements.
 
 ```bash
@@ -15,9 +22,8 @@ Create python virtual environment.
 pip install virtualenv
 virtualenv --version
 ```
-Go to project folder.
-
 ```bash
+virtualenv env
 set FLASK_APP=main.py
 flask run
 ```
