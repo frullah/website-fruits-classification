@@ -52,3 +52,6 @@ Type http://127.0.0.1:5000/ on your browser.
 
   * **Code:** 200 <br />
     **Content:** `{ freshness_level : 100, price : 10000 }`
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
