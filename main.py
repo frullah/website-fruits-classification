@@ -65,7 +65,7 @@ def upload_predict():
                 "payment.html",
                 prediction=pred,
                 image_loc=to_send,
-                fullprice=price
+                price=price
             )
     return render_template("index.html")
 
