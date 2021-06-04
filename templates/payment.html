@@ -7,13 +7,13 @@
       <a href="purchase.html" class="btn btn-primary">Beli</a>
       <a href="/" class="btn btn-primary">Tidak</a>
     </div>
-    <h3 class="h3 mb-3 font-weight-normal" aria-label="Persentase kesegaran">
+    <h3 class="h3 mb-3 font-weight-normal">
       <div>Tingkat Kematangan</div>
-      {{prediction}}%
+      <div aria-label="Persentase kesegaran">{{prediction}}%</div>
     </h3>
-    <h3 class="h3 mb-3 font-weight-normal" aria-label="Harga">
+    <h3 class="h3 mb-3 font-weight-normal">
       <div>Harga Setelah didiskon</div>
-      {{fullprice}}
+      <div aria-label="Harga">{{fullprice}}%</div>
     </h3>
   </section>
 {% endblock%}
