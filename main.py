@@ -37,6 +37,22 @@ class Net(nn.Module):
 
 
 def predict(image, model):
+    fresh_percent = process_image(image, model)
+    return int(fresh_percent[0][0].item()*100)
+
+
+def price(image, model):
+    fresh_percent = process_image(image, model)
+    value = int(fresh_percent[0][0].item()*100)
+    if value != 0:
+        return int(value/100*10000)
+    elif value == 99:
+        return "Masih Fresh"
+    elif value == 0:
+        return "Gratis"
+
+
+def process_image(image, model):
     mean = (0.7369, 0.6360, 0.5318)
     std = (0.3281, 0.3417, 0.3704)
     transformations_test = transforms.Compose([
@@ -46,37 +62,11 @@ def predict(image, model):
     img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     img = cv2.resize(img, (32, 32))
     img_as_tensor = transformations_test(img)
-    s = nn.Softmax(dim=1)
     batch = img_as_tensor.unsqueeze(0)
     out = model(batch)
-    print(model)
-    fresh_percent = s(out)
-
-    return int(fresh_percent[0][0].item()*100)
-
-
-def price(image, model):
-    mean1 = (0.7369, 0.6360, 0.5318)
-    std1 = (0.3281, 0.3417, 0.3704)
-    transformations_test1 = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean1, std1)
-    ])
-    img1 = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    img1 = cv2.resize(img1, (32, 32))
-    img_as_tensor1 = transformations_test1(img1)
-    s1 = nn.Softmax(dim=1)
-    batch1 = img_as_tensor1.unsqueeze(0)
-    out1 = model(batch1)
-    print(model)
-    fresh_percent1 = s1(out1)
-    value = int(fresh_percent1[0][0].item()*100)
-    if value != 0:
-        return int(value/100*10000)
-    elif value == 99:
-        return "Masih Fresh"
-    elif value == 0:
-        return "Gratis"
+    s = nn.Softmax(dim=1)
+    result = s(out)
+    return result
 
 
 @app.route("/", methods=["GET", "POST"])
