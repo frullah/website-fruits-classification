@@ -1,6 +1,26 @@
 # website-fruits-classification
 
-Our website for Bangkit Capstone Project that can knowing the level of ripeness of fruits
+Our website for Bangkit Capstone Project that can predict the level of ripeness of fruits
+
+## How to install?
+
+Use [pip](https://pip.pypa.io/en/stable/) package manager to install requirements.
+
+```bash
+pip install -r requirements.txt
+```
+Create python virtual environment.
+
+```bash
+pip install virtualenv
+virtualenv --version
+```
+Go to project folder.
+
+```bash
+set FLASK_APP=main.py
+flask run
+```
 
 ## API Endpoints
 
