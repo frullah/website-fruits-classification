@@ -85,7 +85,7 @@ def recognize(image_file):
             image_file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
         MODEL = Net()
         MODEL.load_state_dict(torch.load(
-            "FreshnessDetector.pt", map_location=torch.device(DEVICE)))
+            "Trained-model.pt", map_location=torch.device(DEVICE)))
         freshness_percentage = get_freshness_percentage(image, MODEL)
         price = get_price(freshness_percentage)
         return {
