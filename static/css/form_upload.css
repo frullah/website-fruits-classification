@@ -4,25 +4,11 @@ body {
 }
 
 body {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
   background-color: #f5f5f5;
 }
 
 .form-upload {
-  width: 100%;
   max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
 }
 .form-upload .checkbox {
   font-weight: 400;
@@ -57,4 +43,3 @@ label.cameraButton:active {
 /* This is the part that actually hides the 'Choose file' text box for camera inputs */
 label.cameraButton input[accept*="camera"] {
   display: none;
-}
