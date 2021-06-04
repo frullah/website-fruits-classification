@@ -2,7 +2,7 @@
 
 Our website for Bangkit Capstone Project that can knowing the level of ripeness of fruits
 
-## Endpoints
+## API Endpoints
 
 ### Recognize Image
 
@@ -22,7 +22,7 @@ Our website for Bangkit Capstone Project that can knowing the level of ripeness 
 
   `multipart/form-data`
 
-* **Parameters**
+* **Data Params**
 
    `image=[file]`
 
