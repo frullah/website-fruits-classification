@@ -2,7 +2,7 @@
 
 Our website for Bangkit Capstone Project that can predict the level of ripeness of fruits
 
-## How to install?
+## How to run locally?
 
 Use [pip](https://pip.pypa.io/en/stable/) package manager to install requirements.
 
@@ -21,6 +21,8 @@ Go to project folder.
 set FLASK_APP=main.py
 flask run
 ```
+Type http://127.0.0.1:5000/ on your browser.
+
 
 ## API Endpoints
 
