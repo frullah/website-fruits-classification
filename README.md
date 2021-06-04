@@ -22,6 +22,7 @@ Create python virtual environment.
 pip install virtualenv
 virtualenv --version
 ```
+Set virtual environment and flask app's file
 ```bash
 virtualenv env
 set FLASK_APP=main.py
