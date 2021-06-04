@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-  <section class="mt-4 small-container text-center" aria-label="Recognize result wrapper">
+  <section class="small-container text-center" aria-label="Recognize result wrapper">
     <hr>
     <img class="mb-4" src="{{image_loc}}" alt="submitted image" width="256" height="256">
     <div class="btn-group mb-4" aria-label="Basic outlined example">
@@ -13,7 +13,7 @@
     </h3>
     <h3 class="h3 mb-3 font-weight-normal">
       <div>Harga Setelah didiskon</div>
-      <div aria-label="Harga">{{price}}%</div>
+      <div aria-label="Harga">{{price}}</div>
     </h3>
   </section>
 {% endblock%}
