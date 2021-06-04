@@ -2,7 +2,6 @@ import os
 from flask import Flask
 from flask import request
 from flask import render_template
-import torch.nn.functional as F
 import torch.optim as optim
 import torch.nn as nn
 from torchvision import transforms
@@ -10,7 +9,7 @@ import torch
 import cv2
 import numpy as np
 import base64
-
+from net import Net
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "static"
@@ -18,41 +17,19 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 DEVICE = "cpu"
 MODEL = None
 
-
-class Net(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, padding=1)
-        self.conv2 = nn.Conv2d(16, 8, kernel_size=3, padding=1)
-        self.fc1 = nn.Linear(8*8*8, 32)
-        self.fc2 = nn.Linear(32, 2)
-
-    def forward(self, x):
-        out = F.max_pool2d(torch.tanh(self.conv1(x)), 2)
-        out = F.max_pool2d(torch.tanh(self.conv2(out)), 2)
-        out = out.view(-1, 8*8*8)
-        out = torch.tanh(self.fc1(out))
-        out = self.fc2(out)
-        return out
-
-
-def predict(image, model):
-    fresh_percent = process_image(image, model)
-    return int(fresh_percent[0][0].item()*100)
-
-
-def price(image, model):
-    fresh_percent = process_image(image, model)
-    value = int(fresh_percent[0][0].item()*100)
-    if value != 0:
-        return int(value/100*10000)
-    elif value == 99:
-        return "Masih Fresh"
-    elif value == 0:
+def price_text(price):
+    """Give price text to be rendered in HTML"""
+    if price == 0:
         return "Gratis"
 
+    return price
 
-def process_image(image, model):
+
+def get_price(freshness_percentage):
+    return int(freshness_percentage/100*10000)
+
+
+def get_freshness_percentage(image, model):
     mean = (0.7369, 0.6360, 0.5318)
     std = (0.3281, 0.3417, 0.3704)
     transformations_test = transforms.Compose([
@@ -66,7 +43,7 @@ def process_image(image, model):
     out = model(batch)
     s = nn.Softmax(dim=1)
     result = s(out)
-    return result
+    return int(result[0][0].item()*100)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -77,13 +54,19 @@ def upload_predict():
             recognized = recognize(image_file)
             image = recognized["image"]
             pred = recognized["result"]["freshness_level"]
-            prices = recognized["result"]["price"]
+            price = recognized["result"]["price"]
+            price = price_text(price)
 
             # In memory
             image_content = cv2.imencode('.jpg', image)[1].tostring()
             encoded_image = base64.encodestring(image_content)
             to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
-            return render_template("payment.html", prediction=pred, image_loc=to_send, fullprice=prices)
+            return render_template(
+                "payment.html",
+                prediction=pred,
+                image_loc=to_send,
+                fullprice=price
+            )
     return render_template("index.html")
 
 
@@ -104,13 +87,13 @@ def recognize(image_file):
         MODEL = Net()
         MODEL.load_state_dict(torch.load(
             "FreshnessDetector.pt", map_location=torch.device(DEVICE)))
-        freshness_level = predict(image, MODEL)
-        prices = price(image, MODEL)
+        freshness_percentage = get_freshness_percentage(image, MODEL)
+        price = get_price(freshness_percentage)
         return {
             "image": image,
             "result": {
-                "freshness_level": freshness_level,
-                "price": prices
+                "freshness_level": freshness_percentage,
+                "price": price
             }
         }
 
