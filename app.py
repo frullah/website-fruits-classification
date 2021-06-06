@@ -81,8 +81,10 @@ def api_recognize():
 
 def recognize(image_file):
     if image_file:
-        image = cv2.imdecode(np.fromstring(
-            image_file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        image = cv2.imdecode(
+            np.fromstring(image_file.read(), np.uint8),
+            cv2.IMREAD_UNCHANGED
+        )
         MODEL = Net()
         MODEL.load_state_dict(torch.load(
             "FreshnessDetector.pt", map_location=torch.device(DEVICE)))
