@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import request
 from flask import render_template
-import torch.optim as optim
 import torch.nn as nn
 from torchvision import transforms
 import torch
@@ -47,26 +46,27 @@ def get_freshness_percentage(image, model):
 
 @app.route("/", methods=["GET", "POST"])
 def upload_predict():
-    if request.method == "POST":
-        image_file = request.files["image"]
-        if image_file:
-            recognized = recognize(image_file)
-            image = recognized["image"]
-            pred = recognized["result"]["freshness_level"]
-            price = recognized["result"]["price"]
-            price = price_text(price)
+    if request.method == "GET":
+        return render_template("index.html")
 
-            # In memory
-            image_content = cv2.imencode('.jpg', image)[1].tostring()
-            encoded_image = base64.encodestring(image_content)
-            to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
-            return render_template(
-                "payment.html",
-                prediction=pred,
-                image_loc=to_send,
-                price=price
-            )
-    return render_template("index.html")
+    image_file = request.files["image"]
+    if image_file:
+        recognized = recognize(image_file)
+        image = recognized["image"]
+        pred = recognized["result"]["freshness_level"]
+        price = recognized["result"]["price"]
+        price = price_text(price)
+
+        # In memory
+        image_content = cv2.imencode('.jpg', image)[1].tostring()
+        encoded_image = base64.encodestring(image_content)
+        to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
+        return render_template(
+            "payment.html",
+            prediction=pred,
+            image_loc=to_send,
+            price=price
+        )
 
 
 @app.route('/purchase.html')
